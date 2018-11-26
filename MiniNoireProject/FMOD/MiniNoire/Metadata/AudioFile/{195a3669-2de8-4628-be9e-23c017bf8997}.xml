@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="AudioFile" id="{195a3669-2de8-4628-be9e-23c017bf8997}">
+        <property name="assetPath">
+            <value>MiniNoireV1.3_Melody1_B.wav</value>
+        </property>
+        <property name="isStreaming">
+            <value>true</value>
+        </property>
+        <property name="frequencyInKHz">
+            <value>48</value>
+        </property>
+        <property name="channelCount">
+            <value>2</value>
+        </property>
+        <property name="length">
+            <value>21.333333333333332</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{e4bc63b2-0bb0-49ce-b8c6-a718c548d286}</destination>
+        </relationship>
+    </object>
+</objects>

@@ -16,7 +16,7 @@ MonoBehaviour:
   sourceProjectPath: FMOD\MiniNoire\MiniNoire.fspro
   SourceProjectPathUnformatted: FMOD\MiniNoire\MiniNoire.fspro
   SourceBankPathUnformatted: FMOD\MiniNoire\Build
-  AutomaticEventLoading: 1
+  AutomaticEventLoading: 0
   AutomaticSampleLoading: 0
   ImportType: 0
   TargetAssetPath: 
@@ -26,7 +26,7 @@ MonoBehaviour:
     Value: 3
   SampleRateSettings:
   - Platform: 1
-    Value: 48000
+    Value: 44100
   - Platform: 2
     Value: 0
   LiveUpdateSettings:

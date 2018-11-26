@@ -12,8 +12,8 @@ public class AudioMaster : MonoBehaviour
 
     public string Event = ""; //allows us to put in the event name in the inspector
 
-    void Awake ()
-        //this is being called before the start
+    void Awake()
+    //this is being called before the start
     {
         LoadSoundBank(banktoLoad);
     }
@@ -46,9 +46,8 @@ public class AudioMaster : MonoBehaviour
     public void Play()
     {
             EventDescription = RuntimeManager.GetEventDescription(Event); //this assigns the EventDescription from the Event string variable that we set in the editor
-            EventDescription.createInstance(out EventInstance); //this creates an EventInstance from the  EventDescription
+            EventDescription.createInstance(out EventInstance); //this creates an EventInstance from the EventDescription
             EventInstance.start(); //this starts the event
     }
 
-
-    }
+}
