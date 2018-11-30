@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="ParameterPreset" id="{eae30f3a-18bf-4e45-988b-72a544ac3f08}">
+        <property name="name">
+            <value>CrimeSceneOn</value>
+        </property>
+        <relationship name="folder">
+            <destination>{e3059ef0-3b25-4b44-bd3c-2fc063a9df6e}</destination>
+        </relationship>
+        <relationship name="parameter">
+            <destination>{d7f91896-70ed-4fad-baa6-837595c6fa03}</destination>
+        </relationship>
+    </object>
+    <object class="GameParameter" id="{d7f91896-70ed-4fad-baa6-837595c6fa03}">
+        <property name="initialValue">
+            <value>0</value>
+        </property>
+    </object>
+</objects>
