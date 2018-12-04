@@ -13,10 +13,6 @@ public class AudioMaster : MonoBehaviour
 
     public string Event = ""; //allows us to put in the event name in the inspector
 
-    bool fade = false;
-    string fadeParameterName = "";
-    float fadeToValue = 0;
-
     void Awake()
     //this is being called before the start
     {
@@ -55,53 +51,55 @@ public class AudioMaster : MonoBehaviour
         EventInstance.start(); //this starts the event
     }
 
-    void OnTriggerEnter(Collider other)//other is the trigger we enter
+    void OnTriggerEnter(Collider other)//this will start the music as soon as we enter the trigger ("Environment" or "CrimeScene"), "other is the trigger we enter
     {
-        if (other.tag == "Environment")
+        if (other.tag == "Environment")//if the tag of the trigger is equal to "Environment" then we will play music
         {
-            PlayMusic();
+            PlayMusic();//plays the music 
         }
 
-        if (other.tag == "CrimeScene")
+        if (other.tag == "CrimeScene")//if the tag is set to "CrimeScene" then we set the FadeParameter to 1
         {
-            StopCoroutine(FadeParameter("CrimeSceneOn", 0, 0.5f, false));
-            StartCoroutine(FadeParameter ("CrimeSceneOn", 1, 0.5f,true)); //calling the coroutine function, starts of true because we are fading in when we enter the CrimeScene
-            //EventInstance.setParameterValue("CrimeSceneOn", 1f);
+            StopCoroutine(FadeParameter("CrimeSceneOn", 0, 0.5f, false));//stops the coroutine
+            StartCoroutine(FadeParameter ("CrimeSceneOn", 1, 0.5f,true)); //calling the coroutine function, starts off true because we are fading in when we enter the CrimeScene
+            
         }
     }
 
-    private void OnTriggerExit(Collider other)
+    private void OnTriggerExit(Collider other)//function for leaving the "CrimeScene" tag
     {
-        if (other.tag == "CrimeScene")
+        if (other.tag == "CrimeScene")//if we leave the "CrimeScene" we set the FadeParameter to 0
         {
-            StopCoroutine(FadeParameter("CrimeSceneOn", 1, 0.5f, true));
-            StartCoroutine(FadeParameter("CrimeSceneOn", 0, 0.5f, false));
-            //EventInstance.setParameterValue("CrimeSceneOn", 0f);
+            StopCoroutine(FadeParameter("CrimeSceneOn", 1, 0.5f, true));//stops the coroutine so we don't have multiple instances of it
+            StartCoroutine(FadeParameter("CrimeSceneOn", 0, 0.5f, false));//sets parameterTargetValue to 0 and fadeIn to false
+            
         }
 
     }
-    IEnumerator FadeParameter(string parameterName, float parameterTargetValue, float fadeMultiplier, bool fadeIn)//coroutine 
+    IEnumerator FadeParameter(string parameterName, float parameterTargetValue, float fadeMultiplier, bool fadeIn)//coroutine (can think of it as a function that exists outside of this code)
+        //parameterName (the name of the parameter we're adjusting, parameterTargetValue (the value we're trying to reach), fadeMultiplier (the number added to increment finalValue to reach parameterTargetValue), 
+        // bool fadeIn (on true, fades parameter in, on false fades out)
     {
-        float currentParamValue;
-        float finalValue;
-        EventInstance.getParameterValue(parameterName,out currentParamValue, out finalValue);
-        if(fadeIn == true)
+        float currentParamValue;//value of the current parameter
+        float finalValue;//final value of the parameter
+        EventInstance.getParameterValue(parameterName,out currentParamValue, out finalValue);//checks the current  value of the parameter
+        if (fadeIn == true)//checks if we're fading in
         {
-            while (finalValue < parameterTargetValue)//while this is true, unity will keep executing the code below this 
+            while (finalValue < parameterTargetValue)//while finalValue is less than the value we're trying to reach, unity will keep executing the code below this 
             {
-                finalValue = finalValue + fadeMultiplier;
-                EventInstance.setParameterValue(parameterName, finalValue);
-                yield return new WaitForSeconds(.1f);
+                finalValue = finalValue + fadeMultiplier;//increments finalValue with the fadeMultiplier
+                EventInstance.setParameterValue(parameterName, finalValue);//adjust the parameter value to new finalValue
+                yield return new WaitForSeconds(.1f);//wait for 0.1 seconds before looping again
             }
 
         }
-        else
+        else// if fadeIn is false
         {
-            while (finalValue > parameterTargetValue)//while this is true, unity will keep executing the code below this 
+            while (finalValue > parameterTargetValue)//checks if the finalValue is larger than the parameterTargetValue 
             {
-                finalValue = finalValue - fadeMultiplier;
-                EventInstance.setParameterValue(parameterName, finalValue);
-                yield return new WaitForSeconds(.1f);
+                finalValue = finalValue - fadeMultiplier;//this adjusts the finalValue by subtracting the fadeMultiplier from it
+                EventInstance.setParameterValue(parameterName, finalValue);//adjusts the new finalValue
+                yield return new WaitForSeconds(.1f);//wait for 0.1 seconds before looping again
             }
         }
 
