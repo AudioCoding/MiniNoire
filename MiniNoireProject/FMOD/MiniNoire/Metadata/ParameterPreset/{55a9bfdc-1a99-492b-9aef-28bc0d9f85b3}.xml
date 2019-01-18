@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="ParameterPreset" id="{55a9bfdc-1a99-492b-9aef-28bc0d9f85b3}">
+        <property name="name">
+            <value>DistanceToClue</value>
+        </property>
+        <relationship name="folder">
+            <destination>{e3059ef0-3b25-4b44-bd3c-2fc063a9df6e}</destination>
+        </relationship>
+        <relationship name="parameter">
+            <destination>{69387e12-6a4e-4838-bd82-c379c9ae23c7}</destination>
+        </relationship>
+    </object>
+    <object class="GameParameter" id="{69387e12-6a4e-4838-bd82-c379c9ae23c7}">
+        <property name="maximum">
+            <value>30</value>
+        </property>
+        <property name="initialValue">
+            <value>30</value>
+        </property>
+    </object>
+</objects>

@@ -11,7 +11,14 @@ public class AudioMaster : MonoBehaviour
     private FMOD.Studio.EventInstance EventInstance;//this adds an FMOD.Studio EventInstance variable
     private FMOD.Studio.EventDescription EventDescription;//this adds an FMOD.Studio EventDescription variable
 
+
     public string Event = ""; //allows us to put in the event name in the inspector
+    public List<Transform> cluelist;
+
+    private float distanceToClosestClue;
+    public float maxClueDistance;
+    private string nameOfClosestClue;
+
 
     void Awake()
     //this is being called before the start
@@ -21,12 +28,41 @@ public class AudioMaster : MonoBehaviour
 
     void Start()
     {
-
+        
     }
+
+
+
     void Update()
     {
-     
+        distanceToClosestClue = maxClueDistance;
+    
+        foreach (Transform clue in cluelist)
+        {
+            
+            float dist = Vector3.Distance(clue.position, transform.position);
+            if(dist < maxClueDistance && dist < distanceToClosestClue)
+            {
+                distanceToClosestClue = dist;
+                nameOfClosestClue = clue.name;
+            }
+        
+       
+        }
+        print("Closest Clue Is " + nameOfClosestClue + " at: " + distanceToClosestClue);
+        EventInstance.setParameterValue("DistanceToClue", distanceToClosestClue);
     }
+
+
+        //(int i = 0; i < cluelist.Count; i++ ) //i++ is the same as i = i = 1
+
+
+       // float dist = Vector3.Distance(cluelist[0].position, transform.position);//prints distance of float between two objects, using this to find distance between clue game objects and FMOD listener
+        
+        //float dist = Vector3.Distance(clue.position, transform.position);//prints distance of float between two objects, using this to find distance between clue game objects and FMOD listener
+        //print("Distance to Clue: " + dist);
+        //EventInstance.setParameterValue("DistanceToClue", dist);
+    
 
     void LoadSoundBank(string Bankname)//this loads the function LoadSoundBank with our input Bankname
     {
@@ -49,6 +85,11 @@ public class AudioMaster : MonoBehaviour
         EventDescription = RuntimeManager.GetEventDescription(Event); //this assigns the EventDescription from the Event string variable that we set in the editor
         EventDescription.createInstance(out EventInstance); //this creates an EventInstance from the EventDescription
         EventInstance.start(); //this starts the event
+
+        FMOD.Studio.PARAMETER_DESCRIPTION distanceToClue_fmodParam;
+        EventDescription.getParameter("DistanceToClue", out distanceToClue_fmodParam);
+        maxClueDistance = distanceToClue_fmodParam.maximum;
+        print("Max Distance to Clue = " + maxClueDistance);
     }
 
     void OnTriggerEnter(Collider other)//this will start the music as soon as we enter the trigger ("Environment" or "CrimeScene"), "other is the trigger we enter
@@ -60,9 +101,11 @@ public class AudioMaster : MonoBehaviour
 
         if (other.tag == "CrimeScene")//if the tag is set to "CrimeScene" then we set the FadeParameter to 1
         {
-            StopCoroutine(FadeParameter("CrimeSceneOn", 0, 0.5f, false));//stops the coroutine
-            StartCoroutine(FadeParameter ("CrimeSceneOn", 1, 0.5f,true)); //calling the coroutine function, starts off true because we are fading in when we enter the CrimeScene
-            
+            //MusicV2 uses fades in FMOD instead of fades in code
+            //StopCoroutine(FadeParameter("CrimeSceneOn", 0, 0.5f, false));//stops the coroutine
+            //StartCoroutine(FadeParameter ("CrimeSceneOn", 1, 0.5f,true)); //calling the coroutine function, starts off true because we are fading in when we enter the CrimeScene
+            EventInstance.setParameterValue("CrimeSceneOn", 1.0f);
+
         }
     }
 
@@ -70,9 +113,11 @@ public class AudioMaster : MonoBehaviour
     {
         if (other.tag == "CrimeScene")//if we leave the "CrimeScene" we set the FadeParameter to 0
         {
-            StopCoroutine(FadeParameter("CrimeSceneOn", 1, 0.5f, true));//stops the coroutine so we don't have multiple instances of it
-            StartCoroutine(FadeParameter("CrimeSceneOn", 0, 0.5f, false));//sets parameterTargetValue to 0 and fadeIn to false
-            
+            //MusicV2 uses fades in FMOD instead of fades in code
+            //StopCoroutine(FadeParameter("CrimeSceneOn", 1, 0.5f, true));//stops the coroutine so we don't have multiple instances of it
+            //StartCoroutine(FadeParameter("CrimeSceneOn", 0, 0.5f, false));//sets parameterTargetValue to 0 and fadeIn to false
+            EventInstance.setParameterValue("CrimeSceneOn", 0f);
+
         }
 
     }
