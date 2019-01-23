@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using FMODUnity;//this calls the FMODUnity namespace (a collection of definitions) which will allow us to use FMODUnity functions
+using System;
+
 
 public class AudioMaster : MonoBehaviour
 {
@@ -18,6 +20,8 @@ public class AudioMaster : MonoBehaviour
     private float distanceToClosestClue;
     public float maxClueDistance;
     private string nameOfClosestClue;
+
+    //private int BeatCounter = -8;
 
 
     void Awake()
@@ -86,11 +90,27 @@ public class AudioMaster : MonoBehaviour
         EventDescription.createInstance(out EventInstance); //this creates an EventInstance from the EventDescription
         EventInstance.start(); //this starts the event
 
+        FMOD.Studio.EVENT_CALLBACK callback;//special type of variable defined by FMOD.studio called EVENT_CALLBACK
+        callback = new FMOD.Studio.EVENT_CALLBACK(BeatEventCallBack);//pointer to the function that we're going to callback which is MusicEventCallBack
+
+        EventInstance.setCallback(callback, FMOD.Studio.EVENT_CALLBACK_TYPE.TIMELINE_BEAT);//sets a callback on the event that is created
+
         FMOD.Studio.PARAMETER_DESCRIPTION distanceToClue_fmodParam;
         EventDescription.getParameter("DistanceToClue", out distanceToClue_fmodParam);
         maxClueDistance = distanceToClue_fmodParam.maximum;
         print("Max Distance to Clue = " + maxClueDistance);
     }
+
+    //public FMOD.RESULT BeatEventCallBack(FMOD.Studio.EVENT_CALLBACK_TYPE type, FMOD.Studio.EventInstance eventInstance, IntPtr parameters)//this function needs to return an a FMOD result and contain all of this information
+  //  {
+        //BeatCounter++;
+       // print("Callback called" + BeatCounter);
+        //if(BeatCounter >= 16){
+           // print("Key Changed");
+            //BeatCounter = 0;
+        //}
+        //return FMOD.RESULT.OK;//this is an enum - a list of states, we need to return a result for callbacks
+   // }
 
     void OnTriggerEnter(Collider other)//this will start the music as soon as we enter the trigger ("Environment" or "CrimeScene"), "other is the trigger we enter
     {
