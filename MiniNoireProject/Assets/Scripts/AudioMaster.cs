@@ -4,7 +4,11 @@ using UnityEngine;
 using FMODUnity;//this calls the FMODUnity namespace (a collection of definitions) which will allow us to use FMODUnity functions
 using System;
 
-
+enum Music_Key // a variable of pre-defined values, in this case our key changes
+{
+    Key_BMinor,
+    Key_FSharp
+}
 public class AudioMaster : MonoBehaviour
 {
     //public string banktoLoad;//this is a public variable that allows us to specify an FMOD bank to load for our event in the inspector
@@ -21,8 +25,10 @@ public class AudioMaster : MonoBehaviour
     public float maxClueDistance;
     private string nameOfClosestClue;
 
-    //private int BeatCounter = -8;
+    public static int BeatCounter = -8;
+    static Music_Key musicKey = Music_Key.Key_BMinor; // creating a variable to define our first music key, we'll use this variable to determine the current key of the music
 
+    static bool playStinger = false;
 
     void Awake()
     //this is being called before the start
@@ -100,17 +106,47 @@ public class AudioMaster : MonoBehaviour
         maxClueDistance = distanceToClue_fmodParam.maximum;
         print("Max Distance to Clue = " + maxClueDistance);
     }
+    public FMOD.RESULT BeatEventCallBack(FMOD.Studio.EVENT_CALLBACK_TYPE type, FMOD.Studio.EventInstance eventInstance, IntPtr parameters)//this function needs to return an a FMOD result and contain all of this information
+  {
+        BeatCounter++;
+        print("Callback called" + BeatCounter);
+        if(BeatCounter >= 16){
 
-    //public FMOD.RESULT BeatEventCallBack(FMOD.Studio.EVENT_CALLBACK_TYPE type, FMOD.Studio.EventInstance eventInstance, IntPtr parameters)//this function needs to return an a FMOD result and contain all of this information
-  //  {
-        //BeatCounter++;
-       // print("Callback called" + BeatCounter);
-        //if(BeatCounter >= 16){
-           // print("Key Changed");
-            //BeatCounter = 0;
-        //}
-        //return FMOD.RESULT.OK;//this is an enum - a list of states, we need to return a result for callbacks
-   // }
+            switch (musicKey) // switch allows us to switch between statements, our variable is musicKey and we'll switch between b minor and f#
+            {
+                case Music_Key.Key_BMinor:
+                    musicKey = Music_Key.Key_FSharp;
+                    break; //do some stuff
+                case Music_Key.Key_FSharp:
+                    musicKey = Music_Key.Key_BMinor;
+                    break; //do other stuff
+                default:
+                    Debug.LogError("Music Key is unknown");
+                    
+                    break; //if nothing else matches
+            } 
+
+            BeatCounter = -8;
+        }
+        if (playStinger == true)
+
+            switch (musicKey) { 
+                case Music_Key.Key_BMinor:
+                    RuntimeManager.PlayOneShot("event:/Stinger_Bminor");
+                    break; //do some stuff
+                case Music_Key.Key_FSharp:
+                RuntimeManager.PlayOneShot("event:/Stinger_FSharp");
+                break; //do other stuff
+                default:
+                    Debug.LogError("Music Key is unknown");
+
+                    break; //if nothing else matches
+
+            }
+        playStinger = false; //this turns the bool off, so we don't play the stinger over and over again
+
+        return FMOD.RESULT.OK;//this is an enum - a list of states, we need to return a result for callbacks
+    }
 
     void OnTriggerEnter(Collider other)//this will start the music as soon as we enter the trigger ("Environment" or "CrimeScene"), "other is the trigger we enter
     {
@@ -127,6 +163,13 @@ public class AudioMaster : MonoBehaviour
             EventInstance.setParameterValue("CrimeSceneOn", 1.0f);
 
         }
+        if (other.tag == "Clue")
+        {
+            playStinger = true;
+            cluelist.Remove(other.gameObject.transform);
+            Destroy(other.gameObject); // destroys the object so it can't be triggered again
+        }
+
     }
 
     private void OnTriggerExit(Collider other)//function for leaving the "CrimeScene" tag
