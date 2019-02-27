@@ -34,6 +34,10 @@ ExportedObj/
 # Unity3D Generated File On Crash Reports
 sysinfo.txt
 
+Assets/FMODStudioCache.asset
+fmod.log
+fmod_editor.log
+
 # Builds
 *.apk
 *.unitypackage
