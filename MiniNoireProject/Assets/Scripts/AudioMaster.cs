@@ -11,8 +11,7 @@ enum Music_Key // a variable of pre-defined values, in this case our key changes
 }
 public class AudioMaster : MonoBehaviour
 {
-    //public string banktoLoad;//this is a public variable that allows us to specify an FMOD bank to load for our event in the inspector
-    //no need to load and unload banks
+
 
     private FMOD.Studio.EventInstance EventInstance;//this adds an FMOD.Studio EventInstance variable
     private FMOD.Studio.EventDescription EventDescription;//this adds an FMOD.Studio EventDescription variable
@@ -29,6 +28,9 @@ public class AudioMaster : MonoBehaviour
     static Music_Key musicKey = Music_Key.Key_BMinor; // creating a variable to define our first music key, we'll use this variable to determine the current key of the music
 
     static bool playStinger = false;
+    private bool cluePickedUp = false;
+    private float deadClueDistanceValue = 0.0f;
+    public float clueFadeMultiplier = 8.0f;
 
     void Awake()
     //this is being called before the start
@@ -40,8 +42,6 @@ public class AudioMaster : MonoBehaviour
     {
         
     }
-
-
 
     void Update()
     {
@@ -59,10 +59,34 @@ public class AudioMaster : MonoBehaviour
         
        
         }
-        print("Closest Clue Is " + nameOfClosestClue + " at: " + distanceToClosestClue);
-        EventInstance.setParameterValue("DistanceToClue", distanceToClosestClue);
+
+        
+
+        if (cluePickedUp == true)
+        {
+            if (deadClueDistanceValue < distanceToClosestClue)
+            {
+                deadClueDistanceValue += Time.deltaTime * clueFadeMultiplier;               // += means x = x + 1
+                EventInstance.setParameterValue("DistanceToClue", deadClueDistanceValue);
+                print("Cached Clue Value is: " + deadClueDistanceValue);
+            }
+           else
+            {
+                cluePickedUp = false;
+                deadClueDistanceValue = 0.0f; // resets deadClueDistanceValue until we pick up another clue
+                EventInstance.setParameterValue("DistanceToClue", distanceToClosestClue);
+                print("Closest Clue Is " + nameOfClosestClue + " at: " + distanceToClosestClue);
+            }
+        }
+        else
+        {
+            EventInstance.setParameterValue("DistanceToClue", distanceToClosestClue);
+            print("Closest Clue Is " + nameOfClosestClue + " at: " + distanceToClosestClue);
+        }
+        
+        
     }
-    
+
     void LoadSoundBank(string Bankname)//this loads the function LoadSoundBank with our input Bankname
     {
 
@@ -130,7 +154,6 @@ public class AudioMaster : MonoBehaviour
                     Debug.LogError("Music Key is unknown");
 
                     break; //if nothing else matches
-
             }
         playStinger = false; //this turns the bool off, so we don't play the stinger over and over again
 
@@ -155,6 +178,8 @@ public class AudioMaster : MonoBehaviour
         if (other.tag == "Clue")
         {
             playStinger = true;
+            cluePickedUp = true;
+            deadClueDistanceValue = Vector3.Distance(other.gameObject.transform.position, transform.position);
             cluelist.Remove(other.gameObject.transform);
             Destroy(other.gameObject); // destroys the object so it can't be triggered again
         }
