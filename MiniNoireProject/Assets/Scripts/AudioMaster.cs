@@ -62,18 +62,7 @@ public class AudioMaster : MonoBehaviour
         print("Closest Clue Is " + nameOfClosestClue + " at: " + distanceToClosestClue);
         EventInstance.setParameterValue("DistanceToClue", distanceToClosestClue);
     }
-
-
-        //(int i = 0; i < cluelist.Count; i++ ) //i++ is the same as i = i = 1
-
-
-       // float dist = Vector3.Distance(cluelist[0].position, transform.position);//prints distance of float between two objects, using this to find distance between clue game objects and FMOD listener
-        
-        //float dist = Vector3.Distance(clue.position, transform.position);//prints distance of float between two objects, using this to find distance between clue game objects and FMOD listener
-        //print("Distance to Clue: " + dist);
-        //EventInstance.setParameterValue("DistanceToClue", dist);
     
-
     void LoadSoundBank(string Bankname)//this loads the function LoadSoundBank with our input Bankname
     {
 
