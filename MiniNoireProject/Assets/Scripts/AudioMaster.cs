@@ -11,8 +11,6 @@ enum Music_Key // a variable of pre-defined values, in this case our key changes
 }
 public class AudioMaster : MonoBehaviour
 {
-
-
     private FMOD.Studio.EventInstance EventInstance;//this adds an FMOD.Studio EventInstance variable
     private FMOD.Studio.EventDescription EventDescription;//this adds an FMOD.Studio EventDescription variable
 
@@ -22,14 +20,14 @@ public class AudioMaster : MonoBehaviour
 
     private float distanceToClosestClue;
     public float maxClueDistance;
-    private string nameOfClosestClue;
+    private string nameOfClosestClue; 
 
-    public static int BeatCounter = -8;
+    public static int BeatCounter = -8; // this is offset by -8 to account for the intro to the music in fmod which is not included in the loop
     static Music_Key musicKey = Music_Key.Key_BMinor; // creating a variable to define our first music key, we'll use this variable to determine the current key of the music
 
     static bool playStinger = false;
     private bool cluePickedUp = false;
-    private float deadClueDistanceValue = 0.0f;
+    private float deadClueDistanceValue = 0.0f; //this is the distance from the player to the clue that was just picked up
     public float clueFadeMultiplier = 8.0f;
 
     void Awake()
@@ -45,45 +43,41 @@ public class AudioMaster : MonoBehaviour
 
     void Update()
     {
-        distanceToClosestClue = maxClueDistance;
+        distanceToClosestClue = maxClueDistance; // sets distancetoClosestClue as maxClueDistance
     
         foreach (Transform clue in cluelist)
         {
             
-            float dist = Vector3.Distance(clue.position, transform.position);
-            if(dist < maxClueDistance && dist < distanceToClosestClue)
+            float dist = Vector3.Distance(clue.position, transform.position); // sets dist to the position of each clue
+            if(dist < maxClueDistance && dist < distanceToClosestClue) // if the dist of the clue is less than maxClueDistance and is less than distancetoClosestClue 
             {
-                distanceToClosestClue = dist;
-                nameOfClosestClue = clue.name;
+                distanceToClosestClue = dist; // set the distancetoclosestClue to dist
+                nameOfClosestClue = clue.name; //update the nameofClosetClue with correct clue name
             }
         
-       
         }
-
-        
 
         if (cluePickedUp == true)
         {
-            if (deadClueDistanceValue < distanceToClosestClue)
+            if (deadClueDistanceValue < distanceToClosestClue) // if the distance from the player to the most recently picked up clue is less than the distance to the next closest clue
             {
-                deadClueDistanceValue += Time.deltaTime * clueFadeMultiplier;               // += means x = x + 1
-                EventInstance.setParameterValue("DistanceToClue", deadClueDistanceValue);
+                deadClueDistanceValue += Time.deltaTime * clueFadeMultiplier;               // += means x = x + 1, as long as the deadClueDistanceValue is less than distanceToClosestClue we increment the deadClueDistanceValue
+                EventInstance.setParameterValue("DistanceToClue", deadClueDistanceValue); // we assign the parameter to be the deadClueDistanceValue instead of the distancetoClosestClue value
                 print("Cached Clue Value is: " + deadClueDistanceValue);
             }
            else
             {
-                cluePickedUp = false;
+                cluePickedUp = false; 
                 deadClueDistanceValue = 0.0f; // resets deadClueDistanceValue until we pick up another clue
-                EventInstance.setParameterValue("DistanceToClue", distanceToClosestClue);
+                EventInstance.setParameterValue("DistanceToClue", distanceToClosestClue); // if we didn't pick up a clue, we default to setting the parameter to the distance of the closest clue
                 print("Closest Clue Is " + nameOfClosestClue + " at: " + distanceToClosestClue);
             }
         }
         else
         {
-            EventInstance.setParameterValue("DistanceToClue", distanceToClosestClue);
+            EventInstance.setParameterValue("DistanceToClue", distanceToClosestClue); // once the deadClueDistanceValue is no longer less than the distanceToClosestClue, we set the parameter to distancetoClosestClue again
             print("Closest Clue Is " + nameOfClosestClue + " at: " + distanceToClosestClue);
         }
-        
         
     }
 
@@ -116,22 +110,23 @@ public class AudioMaster : MonoBehaviour
 
         FMOD.Studio.PARAMETER_DESCRIPTION distanceToClue_fmodParam;
         EventDescription.getParameter("DistanceToClue", out distanceToClue_fmodParam);
-        maxClueDistance = distanceToClue_fmodParam.maximum;
+        maxClueDistance = distanceToClue_fmodParam.maximum; // sets maxClueDistance to the maximum number in the fmod parameter (30)
         print("Max Distance to Clue = " + maxClueDistance);
     }
+
     public FMOD.RESULT BeatEventCallBack(FMOD.Studio.EVENT_CALLBACK_TYPE type, FMOD.Studio.EventInstance eventInstance, IntPtr parameters)//this function needs to return an a FMOD result and contain all of this information
   {
         BeatCounter++;
         print("Callback called" + BeatCounter);
-        if(BeatCounter >= 16){
+        if(BeatCounter >= 16){ //after 16 beats we will change the key
 
             switch (musicKey) // switch allows us to switch between statements, our variable is musicKey and we'll switch between b minor and f#
             {
-                case Music_Key.Key_BMinor:
-                    musicKey = Music_Key.Key_FSharp;
-                    break; //do some stuff
+                case Music_Key.Key_BMinor: 
+                    musicKey = Music_Key.Key_FSharp; // when the musicKey is b minor, switch to fsharp
+                    break; //do some stuff, exits the function
                 case Music_Key.Key_FSharp:
-                    musicKey = Music_Key.Key_BMinor;
+                    musicKey = Music_Key.Key_BMinor; // when the musicKey is fsharp, switch to bminor
                     break; //do other stuff
                 default:
                     Debug.LogError("Music Key is unknown");
@@ -141,20 +136,22 @@ public class AudioMaster : MonoBehaviour
 
             BeatCounter = -8;
         }
+
         if (playStinger == true)
 
             switch (musicKey) { 
                 case Music_Key.Key_BMinor:
-                    RuntimeManager.PlayOneShot("event:/Stinger_Bminor");
+                    RuntimeManager.PlayOneShot("event:/Stinger_Bminor"); // if the muskcKey is bminor, play the bminor stinger
                     break; //do some stuff
                 case Music_Key.Key_FSharp:
-                RuntimeManager.PlayOneShot("event:/Stinger_FSharp");
+                RuntimeManager.PlayOneShot("event:/Stinger_FSharp"); // if the musicKey is fsharp, play the fsharp stinger
                 break; //do other stuff
                 default:
                     Debug.LogError("Music Key is unknown");
 
                     break; //if nothing else matches
             }
+
         playStinger = false; //this turns the bool off, so we don't play the stinger over and over again
 
         return FMOD.RESULT.OK;//this is an enum - a list of states, we need to return a result for callbacks
@@ -169,18 +166,15 @@ public class AudioMaster : MonoBehaviour
 
         if (other.tag == "CrimeScene")//if the tag is set to "CrimeScene" then we set the FadeParameter to 1
         {
-            //MusicV2 uses fades in FMOD instead of fades in code
-            //StopCoroutine(FadeParameter("CrimeSceneOn", 0, 0.5f, false));//stops the coroutine
-            //StartCoroutine(FadeParameter ("CrimeSceneOn", 1, 0.5f,true)); //calling the coroutine function, starts off true because we are fading in when we enter the CrimeScene
             EventInstance.setParameterValue("CrimeSceneOn", 1.0f);
 
         }
         if (other.tag == "Clue")
         {
-            playStinger = true;
+            playStinger = true; //plays musical stinger if we have picked up a clue
             cluePickedUp = true;
-            deadClueDistanceValue = Vector3.Distance(other.gameObject.transform.position, transform.position);
-            cluelist.Remove(other.gameObject.transform);
+            deadClueDistanceValue = Vector3.Distance(other.gameObject.transform.position, transform.position); //we calculate the current distance from the clue we just picked up
+            cluelist.Remove(other.gameObject.transform); //removes clue from cluelist once it has been picked up
             Destroy(other.gameObject); // destroys the object so it can't be triggered again
         }
 
@@ -190,9 +184,6 @@ public class AudioMaster : MonoBehaviour
     {
         if (other.tag == "CrimeScene")//if we leave the "CrimeScene" we set the FadeParameter to 0
         {
-            //MusicV2 uses fades in FMOD instead of fades in code
-            //StopCoroutine(FadeParameter("CrimeSceneOn", 1, 0.5f, true));//stops the coroutine so we don't have multiple instances of it
-            //StartCoroutine(FadeParameter("CrimeSceneOn", 0, 0.5f, false));//sets parameterTargetValue to 0 and fadeIn to false
             EventInstance.setParameterValue("CrimeSceneOn", 0f);
 
         }
@@ -228,5 +219,4 @@ public class AudioMaster : MonoBehaviour
         yield return null;
     }
 
-    
 }
