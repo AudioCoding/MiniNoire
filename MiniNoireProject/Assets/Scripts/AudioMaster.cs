@@ -19,10 +19,10 @@ public class AudioMaster : MonoBehaviour
     public List<Transform> cluelist;
 
     private float distanceToClosestClue;
-    public float maxClueDistance;
+    private float maxClueDistance;
     private string nameOfClosestClue; 
 
-    public static int BeatCounter = -8; // this is offset by -8 to account for the intro to the music in fmod which is not included in the loop
+    public static int beatCounter = -8; // this is offset by -8 to account for the intro to the music in fmod which is not included in the loop
     static Music_Key musicKey = Music_Key.Key_BMinor; // creating a variable to define our first music key, we'll use this variable to determine the current key of the music
 
     static bool playStinger = false;
@@ -43,8 +43,8 @@ public class AudioMaster : MonoBehaviour
 
     void Update()
     {
-        distanceToClosestClue = maxClueDistance; // sets distancetoClosestClue as maxClueDistance
-    
+        distanceToClosestClue = maxClueDistance; // sets distancetoClosestClue as maxClueDistance which is set in PlayMusic() 
+
         foreach (Transform clue in cluelist)
         {
             
@@ -57,7 +57,7 @@ public class AudioMaster : MonoBehaviour
         
         }
 
-        if (cluePickedUp == true)
+        if (cluePickedUp == true) //cluePickedUp is set to true once we pick up a clue, This is done to gradually fade the gameparamter down instead it right away assigning the parameter to the closest
         {
             if (deadClueDistanceValue < distanceToClosestClue) // if the distance from the player to the most recently picked up clue is less than the distance to the next closest clue
             {
@@ -106,46 +106,46 @@ public class AudioMaster : MonoBehaviour
         FMOD.Studio.EVENT_CALLBACK callback;//special type of variable defined by FMOD.studio called EVENT_CALLBACK
         callback = new FMOD.Studio.EVENT_CALLBACK(BeatEventCallBack);//pointer to the function that we're going to callback which is MusicEventCallBack
 
-        EventInstance.setCallback(callback, FMOD.Studio.EVENT_CALLBACK_TYPE.TIMELINE_BEAT);//sets a callback on the event that is created
+        EventInstance.setCallback(callback, FMOD.Studio.EVENT_CALLBACK_TYPE.TIMELINE_BEAT);// sets a callback on the event that is created with the flag to call this on every Timeline beat
 
         FMOD.Studio.PARAMETER_DESCRIPTION distanceToClue_fmodParam;
         EventDescription.getParameter("DistanceToClue", out distanceToClue_fmodParam);
-        maxClueDistance = distanceToClue_fmodParam.maximum; // sets maxClueDistance to the maximum number in the fmod parameter (30)
+        maxClueDistance = distanceToClue_fmodParam.maximum; // sets maxClueDistance to the maximum value of the game parameter in the fmod parameter (30)
         print("Max Distance to Clue = " + maxClueDistance);
     }
 
-    public FMOD.RESULT BeatEventCallBack(FMOD.Studio.EVENT_CALLBACK_TYPE type, FMOD.Studio.EventInstance eventInstance, IntPtr parameters)//this function needs to return an a FMOD result and contain all of this information
-  {
-        BeatCounter++;
-        print("Callback called" + BeatCounter);
-        if(BeatCounter >= 16){ //after 16 beats we will change the key
+    public FMOD.RESULT BeatEventCallBack(FMOD.Studio.EVENT_CALLBACK_TYPE type, FMOD.Studio.EventInstance eventInstance, IntPtr parameters)//this function is called on each beat and it needs to return an a FMOD result and contain all of this information
+    {
+        beatCounter++;
+        print("Callback called" + beatCounter);
+        if (beatCounter >= 16) { //after 16 beats we will change the key
 
             switch (musicKey) // switch allows us to switch between statements, our variable is musicKey and we'll switch between b minor and f#
             {
-                case Music_Key.Key_BMinor: 
+                case Music_Key.Key_BMinor:
                     musicKey = Music_Key.Key_FSharp; // when the musicKey is b minor, switch to fsharp
-                    break; //do some stuff, exits the function
+                    break; //exits the function
                 case Music_Key.Key_FSharp:
                     musicKey = Music_Key.Key_BMinor; // when the musicKey is fsharp, switch to bminor
-                    break; //do other stuff
+                    break;
                 default:
                     Debug.LogError("Music Key is unknown");
-                    
-                    break; //if nothing else matches
-            } 
 
-            BeatCounter = -8;
+                    break; //if nothing else matches
+            }
+
+            beatCounter = 0;
         }
 
         if (playStinger == true)
-
-            switch (musicKey) { 
+        { 
+            switch (musicKey) {
                 case Music_Key.Key_BMinor:
                     RuntimeManager.PlayOneShot("event:/Stinger_Bminor"); // if the muskcKey is bminor, play the bminor stinger
-                    break; //do some stuff
+                    break; 
                 case Music_Key.Key_FSharp:
-                RuntimeManager.PlayOneShot("event:/Stinger_FSharp"); // if the musicKey is fsharp, play the fsharp stinger
-                break; //do other stuff
+                    RuntimeManager.PlayOneShot("event:/Stinger_FSharp"); // if the musicKey is fsharp, play the fsharp stinger
+                    break; 
                 default:
                     Debug.LogError("Music Key is unknown");
 
@@ -153,7 +153,7 @@ public class AudioMaster : MonoBehaviour
             }
 
         playStinger = false; //this turns the bool off, so we don't play the stinger over and over again
-
+        }
         return FMOD.RESULT.OK;//this is an enum - a list of states, we need to return a result for callbacks
     }
 
@@ -189,8 +189,9 @@ public class AudioMaster : MonoBehaviour
         }
 
     }
-    IEnumerator FadeParameter(string parameterName, float parameterTargetValue, float fadeMultiplier, bool fadeIn)//coroutine (can think of it as a function that exists outside of this code)
-        //parameterName (the name of the parameter we're adjusting, parameterTargetValue (the value we're trying to reach), fadeMultiplier (the number added to increment finalValue to reach parameterTargetValue), 
+         IEnumerator FadeParameter(string parameterName, float parameterTargetValue, float fadeMultiplier, bool fadeIn)//coroutine (can think of it as a function that exists outside of this code)
+        // Code not used. This coroutine was used to fade the game parameter but that functionality was later moved to Fmod for simplicity.    
+        // parameterName (the name of the parameter we're adjusting, parameterTargetValue (the value we're trying to reach), fadeMultiplier (the number added to increment finalValue to reach parameterTargetValue), 
         // bool fadeIn (on true, fades parameter in, on false fades out)
     {
         float currentParamValue;//value of the current parameter
