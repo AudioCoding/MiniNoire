@@ -5,7 +5,7 @@
             <value>Speech</value>
         </property>
         <property name="outputFormat">
-            <value>1</value>
+            <value>2</value>
         </property>
         <relationship name="folder">
             <destination>{63e08b0f-4a1d-476e-8d35-89533e02adf3}</destination>
@@ -185,6 +185,7 @@
     <object class="MixerBusEffectChain" id="{8125dca5-46c2-4d3b-b5cb-57249dd3628a}">
         <relationship name="effects">
             <destination>{12a02125-1188-4b04-8505-f996d5563ffb}</destination>
+            <destination>{69fad5a8-c604-4185-ad32-e9568122c01b}</destination>
         </relationship>
     </object>
     <object class="MixerBusPanner" id="{350da682-f639-48b3-aeda-9f3d07ad7bb1}"/>
@@ -212,6 +213,23 @@
     </object>
     <object class="MixerBusPanner" id="{44243780-0d18-4cd5-90e2-f48ac88cd059}"/>
     <object class="MixerBusFader" id="{12a02125-1188-4b04-8505-f996d5563ffb}"/>
+    <object class="SpatialiserEffect" id="{69fad5a8-c604-4185-ad32-e9568122c01b}">
+        <property name="distanceRolloffType">
+            <value>4</value>
+        </property>
+        <property name="maximumDistance">
+            <value>1</value>
+        </property>
+        <property name="extentMode">
+            <value>2</value>
+        </property>
+        <property name="panBlend">
+            <value>0</value>
+        </property>
+        <property name="userStereoSeparation">
+            <value>0</value>
+        </property>
+    </object>
     <object class="MixerBusFader" id="{8b8e8eb1-8e7c-4df5-815e-82409eaffa70}"/>
     <object class="MixerBusFader" id="{48864225-9d52-4e88-912d-5fa39f00fc12}"/>
 </objects>
