@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.01.10.00">
+    <object class="AudioFile" id="{20533d6d-d58b-4673-9c69-6d3f8f8ceaa6}">
+        <property name="assetPath">
+            <value>SFXCluePickup_02.wav</value>
+        </property>
+        <property name="frequencyInKHz">
+            <value>48</value>
+        </property>
+        <property name="channelCount">
+            <value>1</value>
+        </property>
+        <property name="length">
+            <value>2.6666666666666665</value>
+        </property>
+        <relationship name="masterAssetFolder">
+            <destination>{e4bc63b2-0bb0-49ce-b8c6-a718c548d286}</destination>
+        </relationship>
+    </object>
+</objects>

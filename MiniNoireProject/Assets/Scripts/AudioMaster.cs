@@ -28,7 +28,7 @@ public class AudioMaster : MonoBehaviour
     static bool playStinger = false;
     private bool cluePickedUp = false;
     private float deadClueDistanceValue = 0.0f; //this is the distance from the player to the clue that was just picked up
-    public float clueFadeMultiplier = 8.0f;
+    public float clueFadeMultiplier = 3.0f;
 
     void Awake()
     //this is being called before the start
@@ -171,6 +171,7 @@ public class AudioMaster : MonoBehaviour
         }
         if (other.tag == "Clue")
         {
+            RuntimeManager.PlayOneShot("event:/SFXPickUpClue");
             playStinger = true; //plays musical stinger if we have picked up a clue
             cluePickedUp = true;
             deadClueDistanceValue = Vector3.Distance(other.gameObject.transform.position, transform.position); //we calculate the current distance from the clue we just picked up
