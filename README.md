@@ -1,7 +1,7 @@
 # MiniNoire
 ---
 ### Intro
-A small dynamic music system implementation using Unity and FMOD for educational purposes by <a href="https://twitter.com/jbuaudio" target="_blank">@jbuaudio</a>  and <a href="https://twitter.com/Dani_Kogan" target="_blank">@Dani_Kogan</a>
+A small dynamic music system implementation using Unity and FMOD for educational purposes by <a href="https://twitter.com/jbuaudio" target="_blank">Julie Buchanan</a>  and <a href="https://twitter.com/Dani_Kogan" target="_blank">Dani Kogan</a>
 <br>
 Where a Tech Sound Designer and a Composer switched rules. 
 
