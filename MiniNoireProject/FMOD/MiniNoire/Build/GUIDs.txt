@@ -1,10 +1,7 @@
 {63e08b0f-4a1d-476e-8d35-89533e02adf3} event:/MusicV2
+{c5ac2f51-00b2-4bd9-8929-876d86623a3d} event:/SFXPickUpClue
 {4a6a32a1-bff3-47eb-9288-b213e8f261fe} event:/Stinger_BMinor
 {fae86769-66df-4a2d-9b54-85556dae9979} event:/Stinger_FSharp
-{0077fef1-dae8-4aaf-bcf5-84bf10f5fc32} event:/SFXPickUpClue_01
-{c39fc6c5-caab-4b21-8a60-9a213c555109} event:/SFXPickUpClue_02
-{7aedabfa-28e8-4f60-87fa-04296c0b395f} event:/SFXPickUpClue_03
-{c5ac2f51-00b2-4bd9-8929-876d86623a3d} event:/SFXPickUpClue
 {4ecf02c7-8ea9-4702-b74f-52e825883974} bus:/
 {5beb63c1-8f6a-4e0b-acb2-fadebe11b0f6} bus:/Reverb
 {2240d004-3eb6-4899-994c-dcfdba8265ea} snapshot:/Hello
