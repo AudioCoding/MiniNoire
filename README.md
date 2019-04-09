@@ -3,7 +3,7 @@
 ### Intro
 A small dynamic music system implementation using Unity and FMOD for educational purposes by <a href="https://twitter.com/jbuaudio" target="_blank">Julie Buchanan</a>  and <a href="https://twitter.com/Dani_Kogan" target="_blank">Dani Kogan</a>
 <br>
-Where a Tech Sound Designer and a Composer switched rules. 
+Where a Technical Sound Designer and a Composer switched roles. 
 
 ### The Project
 The aesthetics we chose for the music system was Mini Metro meets Noire. Hence is the name Mini Noire.
